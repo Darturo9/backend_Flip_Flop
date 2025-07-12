@@ -5,6 +5,10 @@ import { UpdateAuthDto } from './dto/update-auth.dto';
 
 @Controller('auth')
 export class AuthController {
+  @Post('login')
+  async login(@Body() user: any) {
+    return this.authService.login(user);
+  }
   constructor(private readonly authService: AuthService) { }
 
   @Get()

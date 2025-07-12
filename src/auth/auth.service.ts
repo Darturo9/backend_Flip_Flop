@@ -7,11 +7,13 @@ import { JwtService } from '@nestjs/jwt';
 export class AuthService {
   constructor(private readonly jwtService: JwtService) { }
   async login(user: any) {
-    const payload = { sub: user.id, email: user.email };
-    return {
-      access_token: this.jwtService.sign(payload),
-    };
-  }
+  const payload = { sub: user.id, email: user.email };
+  const token = this.jwtService.sign(payload);
+  console.log('JWT generado:', token);
+  return {
+    access_token: token,
+  };
+}
 
   findAll() {
     return `This action returns all auth`;

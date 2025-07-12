@@ -1,3 +1,4 @@
+  
 import { Controller, Get, Post, Body, Patch, Param, Delete, Res } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { CreateUserDto } from './dto/create-user.dto';
@@ -16,16 +17,6 @@ export class UsersController {
   async create(@Body() createUserDto: CreateUserDto, @Res() res: Response) {
     console.log('Datos recibidos en /users:', createUserDto);
     const user = await this.usersService.create(createUserDto);
-
-    // Genera el JWT usando el AuthService
-    const token = await this.authService.login(user);
-    console.log('Token generado:', token);
-    res.cookie('jwt', token.access_token, {
-      httpOnly: true,
-      secure: process.env.NODE_ENV === 'production',
-      maxAge: 30 * 24 * 60 * 60 * 1000,
-      sameSite: 'lax',
-    });
     return res.json({ user });
   }
 
@@ -37,6 +28,17 @@ export class UsersController {
       sameSite: 'lax',
     });
     return res.json({ message: 'Logout exitoso' });
+  }
+
+  @Get('google/:googleId')
+  async findByGoogleId(@Param('googleId') googleId: string, @Res() res: Response) {
+    // Busca el usuario por googleId en la base de datos
+    const user = await this.usersService.findByGoogleId(googleId);
+    if (user) {
+      return res.json({ user });
+    } else {
+      return res.json({ user: null });
+    }
   }
 
   @Get()

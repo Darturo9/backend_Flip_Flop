@@ -7,11 +7,11 @@ import { Repository } from 'typeorm';
 
 @Injectable()
 export class UsersService {
-
-
   constructor(
     @InjectRepository(User) private readonly userRepository: Repository<User>,
   ) { }
+
+  
   async create(createUserDto: CreateUserDto) {
     try {
       // Buscar si ya existe el usuario por googleId o email
@@ -37,6 +37,11 @@ export class UsersService {
 
   findAll() {
     return `This action returns all users`;
+  }
+
+  async findByGoogleId(googleId: string) {
+    // Busca el usuario por googleId en la base de datos
+    return this.userRepository.findOne({ where: { googleId } });
   }
 
   findOne(id: number) {
