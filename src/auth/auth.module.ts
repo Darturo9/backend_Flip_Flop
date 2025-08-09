@@ -4,16 +4,23 @@ import { PassportModule } from '@nestjs/passport';
 import { AuthService } from './auth.service';
 import { JwtStrategy } from './jwt.strategy';
 import { AuthController } from './auth.controller';
+import { ConfigModule, ConfigService } from '@nestjs/config';
+
 
 @Module({
   imports: [
     PassportModule,
-    JwtModule.register({
-      secret: process.env.NEXTAUTH_SECRET || 'mi_secreto',
-      signOptions: { expiresIn: '30d' },
+    ConfigModule,
+    JwtModule.registerAsync({
+      imports: [ConfigModule],
+      useFactory: async (configService: ConfigService) => ({
+        secret: configService.get<string>('NEXTAUTH_SECRET'),
+        signOptions: { expiresIn: '30d' },
+      }),
+      inject: [ConfigService],
     }),
   ],
-  controllers: [AuthController], // <-- Agrega esto
+  controllers: [AuthController],
   providers: [AuthService, JwtStrategy],
   exports: [AuthService],
 })

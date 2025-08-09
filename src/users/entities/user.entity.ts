@@ -1,5 +1,7 @@
 import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
 import { Role } from '../roles.enum';
+import { Address } from '../../addresses/entities/address.entity';
+import { Phone } from '../../phones/entities/phone.entity';
 
 @Entity()
 export class User {
@@ -28,4 +30,9 @@ export class User {
     @Column({ default: true })
     isActive: boolean;
 
+    @OneToMany(() => Address, address => address.user)
+    addresses: Address[];
+
+    @OneToMany(() => Phone, phone => phone.user)
+    phones: Phone[];
 }

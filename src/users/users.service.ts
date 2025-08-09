@@ -11,7 +11,7 @@ export class UsersService {
     @InjectRepository(User) private readonly userRepository: Repository<User>,
   ) { }
 
-  
+
   async create(createUserDto: CreateUserDto) {
     try {
       // Buscar si ya existe el usuario por googleId o email
@@ -44,8 +44,8 @@ export class UsersService {
     return this.userRepository.findOne({ where: { googleId } });
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} user`;
+  async findOne(id: number) {
+    return await this.userRepository.findOne({ where: { id } });
   }
 
   update(id: number, updateUserDto: UpdateUserDto) {
